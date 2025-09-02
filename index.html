@@ -305,35 +305,65 @@
             <!-- New scenario inputs with single row layout -->
             <div id="scenarioInputs" class="hidden space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label for="growthRateConservative" class="block font-medium mb-1 text-gray-400">Conservative Growth Rate (%)</label>
-                        <input type="number" id="growthRateConservative" value="3" class="input-field w-full p-3 text-white rounded-lg">
-                    </div>
-                    <div>
-                        <label for="growthRateNeutral" class="block font-medium mb-1 text-gray-400">Neutral Growth Rate (%)</label>
-                        <input type="number" id="growthRateNeutral" value="5" class="input-field w-full p-3 text-white rounded-lg">
-                    </div>
-                    <div>
-                        <label for="growthRateAggressive" class="block font-medium mb-1 text-gray-400">Aggressive Growth Rate (%)</label>
-                        <input type="number" id="growthRateAggressive" value="7" class="input-field w-full p-3 text-white rounded-lg">
-                    </div>
+                    <!-- Growth Rate Section -->
+        <div class="mb-8">
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-4">
+                Growth Rate
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Conservative Input -->
+                <div>
+                    <label for="growth-conservative" class="block text-sm font-medium text-gray-700 mb-1">
+                        Conservative
+                    </label>
+                    <input type="number" id="growth-conservative" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" placeholder="e.g., 2.5%">
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label for="exitYieldConservative" class="block font-medium mb-1 text-gray-400">Conservative Exit Yield (%)</label>
-                        <input type="number" id="exitYieldConservative" value="6" class="input-field w-full p-3 text-white rounded-lg">
-                    </div>
-                    <div>
-                        <label for="exitYieldNeutral" class="block font-medium mb-1 text-gray-400">Neutral Exit Yield (%)</label>
-                        <input type="number" id="exitYieldNeutral" value="4" class="input-field w-full p-3 text-white rounded-lg">
-                    </div>
-                    <div>
-                        <label for="exitYieldAggressive" class="block font-medium mb-1 text-gray-400">Aggressive Exit Yield (%)</label>
-                        <input type="number" id="exitYieldAggressive" value="2" class="input-field w-full p-3 text-white rounded-lg">
-                    </div>
+                <!-- Neutral Input -->
+                <div>
+                    <label for="growth-neutral" class="block text-sm font-medium text-gray-700 mb-1">
+                        Neutral
+                    </label>
+                    <input type="number" id="growth-neutral" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" placeholder="e.g., 5.0%">
+                </div>
+                <!-- Aggressive Input -->
+                <div>
+                    <label for="growth-aggressive" class="block text-sm font-medium text-gray-700 mb-1">
+                        Aggressive
+                    </label>
+                    <input type="number" id="growth-aggressive" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" placeholder="e.g., 7.5%">
                 </div>
             </div>
-            <div>
+        </div>
+
+        <!-- Exit Yield Section -->
+        <div>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-4">
+                Exit Yield
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Conservative Input -->
+                <div>
+                    <label for="yield-conservative" class="block text-sm font-medium text-gray-700 mb-1">
+                        Conservative
+                    </label>
+                    <input type="number" id="yield-conservative" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" placeholder="e.g., 6.0%">
+                </div>
+                <!-- Neutral Input -->
+                <div>
+                    <label for="yield-neutral" class="block text-sm font-medium text-gray-700 mb-1">
+                        Neutral
+                    </label>
+                    <input type="number" id="yield-neutral" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" placeholder="e.g., 5.5%">
+                </div>
+                <!-- Aggressive Input -->
+                <div>
+                    <label for="yield-aggressive" class="block text-sm font-medium text-gray-700 mb-1">
+                        Aggressive
+                    </label>
+                    <input type="number" id="yield-aggressive" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" placeholder="e.g., 5.0%">
+                </div>
+            </div>
+        </div>
                 <label for="timeHorizon" class="block font-medium mb-1 text-gray-400">Time Horizon (Years)</label>
                 <input type="number" id="timeHorizon" value="5" class="input-field w-full p-3 text-white rounded-lg">
             </div>
@@ -789,7 +819,7 @@
 
         const maxDividend = Math.max(...dividends.map(d => d.value));
         const exitPriceFixedHeight = 70;
-        const maxDividendHeight = exitPriceFixedHeight / 2;
+        const maxDividendHeight = exitPriceFixedHeight / 3;
 
         let htmlContent = '';
         dividends.forEach(d => {
