@@ -46,8 +46,8 @@
             -webkit-appearance: none; /* iOS specific styling fix */
         }
         .input-field:focus {
-            border-color: #00bfff;
-            box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.3);
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
             outline: none;
         }
 
@@ -64,7 +64,7 @@
 
         /* Active state for the mode selection labels */
         input[type="radio"]:checked + .mode-label {
-            background-color: #00bfff;
+            background-color: #4CAF50;
             color: #ffffff;
             font-weight: 600;
         }
@@ -138,7 +138,7 @@
         }
         .matrix-header {
             font-weight: bold;
-            color: #00bfff;
+            color: #4CAF50;
             padding: 0.5rem;
             border-bottom: 2px solid rgba(255, 255, 255, 0.1);
         }
@@ -156,11 +156,11 @@
             text-align: left;
             padding-left: 1rem;
             font-weight: 500;
-            color: #53d4ff;
+            color: #9CCC65;
         }
         .matrix-cell.exit-yield-label {
             font-weight: bold;
-            color: #53d4ff;
+            color: #9CCC65;
         }
 
         /* Custom toggle switch for currency selection */
@@ -203,16 +203,10 @@
             opacity: 0;
         }
 
-        .toggle-input {
-            width: 0;
-            height: 0;
-            opacity: 0;
-        }
-
         .toggle-thumb {
             width: 50%;
             height: 100%;
-            background-color: #00bfff;
+            background-color: #4CAF50;
             border-radius: 2rem;
             transition: transform 0.3s ease;
         }
@@ -240,18 +234,76 @@
             gap: 0.5rem;
         }
 
+        /* Specific styles for the improved valuation matrix table */
+        .valuation-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.875rem;
+        }
+
+        .valuation-table th, .valuation-table td {
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .valuation-table th {
+            font-weight: 600;
+            color: #9CCC65;
+            background-color: rgba(255, 255, 255, 0.05);
+            text-transform: none; /* Changed to none */
+        }
+
+        .valuation-table td {
+            color: #E0E0E0;
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .valuation-table th:first-child, .valuation-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+            color: #E0E0E0;
+            padding-left: 1rem;
+        }
+
+        .valuation-table tbody tr:hover td {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .valuation-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .valuation-table th:first-child {
+            border-top-left-radius: 0.75rem;
+        }
+
+        .valuation-table th:last-child {
+            border-top-right-radius: 0.75rem;
+        }
+
+        .valuation-table tr:last-child td:first-child {
+            border-bottom-left-radius: 0.75rem;
+        }
+
+        .valuation-table tr:last-child td:last-child {
+            border-bottom-right-radius: 0.75rem;
+        }
+
+
     </style>
 </head>
 <body>
 
 <div class="container w-full md:w-[80%] lg:w-[75%] mx-auto">
-    <h1 class="text-4xl font-extrabold text-center mb-6" style="color: #00bfff;">Finding Value</h1>
+    <h1 class="text-4xl font-extrabold text-center mb-6" style="color: #4CAF50;">Finding Value</h1>
 
     <!-- Actual Figures Section -->
     <div class="bg-white bg-opacity-5 p-6 rounded-xl mb-6 shadow-md">
         <!-- New flex container for heading and currency toggle -->
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-bold" style="color: #E0E0E0;">Actual Figures</h2>
+            <h2 class="text-xl font-bold" style="color: #E0E0E0;">Actual figures</h2>
             <!-- The new toggle switch -->
             <input type="checkbox" id="currencyToggle" class="toggle-input" onchange="updateCurrencyDisplay()" checked>
             <label for="currencyToggle" class="toggle-container">
@@ -262,21 +314,21 @@
             <div id="priceInput">
                 <div class="symbol-label-group mb-1">
                     <span class="text-lg font-bold text-gray-400" id="currencySymbolPrice">$</span>
-                    <label for="price" class="font-medium text-gray-400">Current Stock Price</label>
+                    <label for="price" class="font-medium text-gray-400">Current stock price</label>
                 </div>
                 <input type="number" id="price" value="100" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <div>
                 <div class="symbol-label-group mb-1">
                     <span class="text-lg font-bold text-gray-400" id="currencySymbolDividend">$</span>
-                    <label for="startingDividend" class="font-medium text-gray-400">Starting Dividend</label>
+                    <label for="startingDividend" class="font-medium text-gray-400">Starting dividend</label>
                 </div>
                 <input type="number" id="startingDividend" value="3" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <div>
                 <div class="symbol-label-group mb-1">
                     <span class="text-lg font-bold text-gray-400">%</span>
-                    <label for="buybackYield" class="font-medium text-gray-400">Share Buyback Yield</label>
+                    <label for="buybackYield" class="font-medium text-gray-400">Share buyback yield</label>
                 </div>
                 <input type="number" id="buybackYield" value="1" class="input-field w-full p-3 text-white rounded-lg">
             </div>
@@ -290,48 +342,48 @@
         <div class="flex flex-col sm:flex-row sm:items-stretch space-y-3 sm:space-y-0 sm:space-x-4">
             <input type="radio" name="mode" value="calculateReturn" id="radioReturn" class="sr-only" onchange="toggleInputs()" checked>
             <label for="radioReturn" id="labelReturn" class="mode-label px-6 py-3 rounded-xl cursor-pointer text-center w-full sm:w-auto flex-1">
-                Expected Return
+                Expected return
             </label>
             <input type="radio" name="mode" value="calculatePrice" id="radioPrice" class="sr-only" onchange="toggleInputs()">
             <label for="radioPrice" id="labelPrice" class="mode-label px-6 py-3 rounded-xl cursor-pointer text-center w-full sm:w-auto flex-1">
-                Target Price
+                Target price
             </label>
             <input type="radio" name="mode" value="scenarioAnalysis" id="radioScenario" class="sr-only" onchange="toggleInputs()">
             <label for="radioScenario" id="labelScenario" class="mode-label px-6 py-3 rounded-xl cursor-pointer text-center w-full sm:w-auto flex-1">
-                Scenario Analysis
+                Scenario analysis
             </label>
         </div>
     </div>
 
     <!-- Subjective Input Section -->
     <div class="bg-white bg-opacity-5 p-6 rounded-xl mb-6 shadow-md">
-        <h2 class="text-xl font-bold mb-4" style="color: #E0E0E0;">Your Assumptions</h2>
+        <h2 class="text-xl font-bold mb-4" style="color: #E0E0E0;">Your assumptions</h2>
         <div class="space-y-4">
             <div id="targetReturnInput" class="hidden">
                 <div class="symbol-label-group mb-1">
                     <span class="text-lg font-bold text-gray-400">%</span>
-                    <label for="totalTargetReturn" class="font-medium text-gray-400">Total Target Return</label>
+                    <label for="totalTargetReturn" class="font-medium text-gray-400">Total target return</label>
                 </div>
                 <input type="number" id="totalTargetReturn" value="10" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <div id="growthRateInput">
                 <div class="symbol-label-group mb-1">
                     <span class="text-lg font-bold text-gray-400">%</span>
-                    <label for="dividendGrowthRate" class="font-medium text-gray-400">Dividend Growth Rate</label>
+                    <label for="dividendGrowthRate" class="font-medium text-gray-400">Dividend growth rate</label>
                 </div>
                 <input type="number" id="dividendGrowthRate" value="3" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <div id="exitYieldInput">
                 <div class="symbol-label-group mb-1">
                     <span class="text-lg font-bold text-gray-400">%</span>
-                    <label for="exitYield" class="font-medium text-gray-400">Exit Yield</label>
+                    <label for="exitYield" class="font-medium text-gray-400">Exit yield</label>
                 </div>
                 <input type="number" id="exitYield" value="3" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <!-- New scenario inputs with single row layout -->
             <div id="scenarioInputs" class="hidden space-y-4">
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-300 mb-2">Growth Rate (%)</h3>
+                    <h3 class="text-lg font-semibold text-gray-300 mb-2">Growth rate (%)</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <div class="symbol-label-group mb-1">
@@ -357,7 +409,7 @@
                     </div>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-300 mb-2">Exit Yield (%)</h3>
+                    <h3 class="text-lg font-semibold text-gray-300 mb-2">Exit yield (%)</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <div class="symbol-label-group mb-1">
@@ -384,7 +436,7 @@
                 </div>
             </div>
             <div>
-                <label for="timeHorizon" class="block font-medium mb-1 text-gray-400">Time Horizon (Years)</label>
+                <label for="timeHorizon" class="block font-medium mb-1 text-gray-400">Time horizon (years)</label>
                 <input type="number" id="timeHorizon" value="5" class="input-field w-full p-3 text-white rounded-lg">
             </div>
         </div>
@@ -392,29 +444,29 @@
 
     <!-- Calculate Button -->
     <div class="mt-8">
-        <button onclick="calculateDDM()" class="w-full text-white font-bold py-4 rounded-xl transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-opacity-50 hover:bg-opacity-80" style="background-color: #00bfff; color: #ffffff;">
-            Find My Price!
+        <button onclick="calculateDDM()" class="w-full text-white font-bold py-4 rounded-xl transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-opacity-50 hover:bg-opacity-80" style="background-color: #4CAF50; color: #ffffff;">
+            Find my price!
         </button>
     </div>
 
     <!-- Results Section -->
     <div id="results" class="mt-8 hidden">
-        <h2 class="text-xl font-bold text-center mb-4" style="color: #E0E0E0;">Forecasted Values</h2>
+        <h2 class="text-xl font-bold text-center mb-4" style="color: #E0E0E0;">Forecasted values</h2>
         <div class="space-y-4">
             <div id="priceResult" class="bg-white bg-opacity-5 p-6 rounded-xl flex flex-col justify-center items-center shadow-md hidden">
                 <span class="text-lg text-gray-400" id="priceLabel"></span>
-                <span id="priceValue" class="font-bold text-4xl mt-1" style="color: #00bfff;"></span>
+                <span id="priceValue" class="font-bold text-4xl mt-1" style="color: #4CAF50;"></span>
             </div>
             <div id="returnResult" class="bg-white bg-opacity-5 p-6 rounded-xl flex flex-col justify-center items-center shadow-md">
                 <span class="text-lg text-gray-400" id="returnLabel"></span>
-                <span id="returnValue" class="font-bold text-4xl mt-1" style="color: #00bfff;"></span>
+                <span id="returnValue" class="font-bold text-4xl mt-1" style="color: #4CAF50;"></span>
             </div>
         </div>
     </div>
 
     <!-- Scenario Analysis Results -->
     <div id="scenarioResults" class="mt-8 hidden bg-white bg-opacity-5 p-6 rounded-xl shadow-md">
-        <h2 class="text-xl font-bold text-center mb-4" style="color: #E0E0E0;">Valuation Matrix</h2>
+        <h2 class="text-xl font-bold text-center mb-4" style="color: #E0E0E0;">Valuation matrix</h2>
         <div id="valuationMatrixContainer"></div>
         <div class="mt-8 text-center space-y-2">
             <div id="averagePriceDisplay" class="font-bold text-xl text-white"></div>
@@ -424,14 +476,14 @@
 
     <!-- Cash Flow Section -->
     <div id="cashFlows" class="bg-white bg-opacity-5 p-6 rounded-xl mt-8 shadow-md hidden">
-        <h2 class="text-xl font-bold text-center mb-4" style="color: #E0E0E0;">Cash Flow Overview</h2>
+        <h2 class="text-xl font-bold text-center mb-4" style="color: #E0E0E0;">Cash flow overview</h2>
         <!-- New div for total dividends -->
         <div id="totalDividendsDisplay" class="bg-white bg-opacity-5 p-4 rounded-lg flex flex-col items-center mb-6">
-            <span class="text-gray-400 text-sm font-medium">Total Cumulative Dividends</span>
-            <span id="totalDividendsValue" class="text-3xl font-bold mt-1" style="color: #53d4ff;"></span>
+            <span class="text-gray-400 text-sm font-medium">Total cumulative dividends</span>
+            <span id="totalDividendsValue" class="text-3xl font-bold mt-1" style="color: #9CCC65;"></span>
             <div class="mt-4 text-center">
-                <span class="text-gray-400 text-sm font-medium">Dividends as % of Total Return</span>
-                <span id="dividendReturnPercentageValue" class="text-xl font-bold mt-1 block" style="color: #00bfff;"></span>
+                <span class="text-gray-400 text-sm font-medium">Dividends as % of total return</span>
+                <span id="dividendReturnPercentageValue" class="text-xl font-bold mt-1 block" style="color: #4CAF50;"></span>
             </div>
         </div>
         
@@ -443,7 +495,7 @@
 <div id="messageBox" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
     <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-sm w-full border-2 border-red-500">
         <p id="messageText" class="text-gray-800 mb-6 text-lg font-medium"></p>
-        <button onclick="hideMessageBox()" class="bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition duration-300" style="background-color: #00bfff; color: #ffffff;">OK</button>
+        <button onclick="hideMessageBox()" class="bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition duration-300" style="background-color: #4CAF50; color: #ffffff;">OK</button>
     </div>
 </div>
 
@@ -602,14 +654,14 @@
             const P0 = parseFloat(document.getElementById('price').value);
             const exitYield = parseFloat(document.getElementById('exitYield').value) / 100;
             if (isNaN(P0) || P0 <= 0 || isNaN(exitYield) || exitYield <= 0) {
-                 showMessageBox("Please enter a valid, positive number for Current Stock Price and Exit Yield.");
+                 showMessageBox("Please enter a valid, positive number for current stock price and exit yield.");
                 return;
             }
             calculateExpectedReturn(P0, D0, years, exitYield, buybackYield);
         } else if (currentMode === 'calculatePrice') {
             const exitYield = parseFloat(document.getElementById('exitYield').value) / 100;
              if (isNaN(exitYield) || exitYield <= 0) {
-                 showMessageBox("Please enter a valid, positive number for Exit Yield.");
+                 showMessageBox("Please enter a valid, positive number for exit yield.");
                 return;
             }
             calculateTargetPrice(D0, years, exitYield, buybackYield);
@@ -624,7 +676,7 @@
     function calculateExpectedReturn(P0, D0, years, exitYield, buybackYield) {
         const dividendGrowthRate = parseFloat(document.getElementById('dividendGrowthRate').value) / 100;
         if (isNaN(dividendGrowthRate)) {
-            showMessageBox("Please enter a valid number for Dividend Growth Rate.");
+            showMessageBox("Please enter a valid number for dividend growth rate.");
             return;
         }
         
@@ -672,7 +724,7 @@
         document.getElementById('priceResult').classList.add('hidden');
         document.getElementById('returnResult').classList.remove('hidden');
         
-        document.getElementById('returnLabel').textContent = "Projected Total Annual Return";
+        document.getElementById('returnLabel').textContent = "Projected total annual return";
         document.getElementById('returnValue').textContent = `${(expectedReturn * 100).toFixed(2)}%`;
 
         document.getElementById('results').classList.remove('hidden');
@@ -688,7 +740,7 @@
         const dividendGrowthRate = parseFloat(document.getElementById('dividendGrowthRate').value) / 100;
 
         if (isNaN(totalTargetReturn) || isNaN(dividendGrowthRate) || totalTargetReturn <= 0) {
-            showMessageBox("Please enter valid, positive numbers for Total Target Return and Dividend Growth Rate.");
+            showMessageBox("Please enter valid, positive numbers for total target return and dividend growth rate.");
             return;
         }
 
@@ -712,7 +764,7 @@
         document.getElementById('returnResult').classList.add('hidden');
         document.getElementById('priceResult').classList.remove('hidden');
         
-        document.getElementById('priceLabel').textContent = "Target Price";
+        document.getElementById('priceLabel').textContent = "Target price";
         document.getElementById('priceValue').textContent = `${getCurrencySymbol()}${targetPrice.toFixed(2)}`;
         
         document.getElementById('results').classList.remove('hidden');
@@ -741,14 +793,14 @@
         // Basic validation for scenario inputs
         const allInputsValid = growthRates.every(g => !isNaN(g)) && exitYields.every(e => !isNaN(e) && e > 0);
         if (!allInputsValid) {
-            showMessageBox("Please enter valid numbers for all Growth Rates and positive numbers for all Exit Yields.");
+            showMessageBox("Please enter valid numbers for all growth rates and positive numbers for all exit yields.");
             return;
         }
 
         const totalTargetReturn = parseFloat(document.getElementById('totalTargetReturn').value) / 100;
         const r = totalTargetReturn - buybackYield;
         if (isNaN(r) || r <= 0) {
-            showMessageBox(`The discount rate must be greater than zero. Please enter a valid Total Target Return greater than the buyback yield.`);
+            showMessageBox(`The discount rate must be greater than zero. Please enter a valid total target return greater than the buyback yield.`);
             return;
         }
         
@@ -778,27 +830,31 @@
         const matrixContainer = document.getElementById('valuationMatrixContainer');
         matrixContainer.innerHTML = '';
         
-        let html = '<div class="valuation-matrix">';
+        let html = '<table class="valuation-table">';
         
-        // Header row for Exit Yields
-        html += '<div class="matrix-header"></div>'; // Top-left empty cell
+        // Table header
+        html += '<thead><tr><th></th>';
         const exitYieldLabels = ['Conservative', 'Neutral', 'Aggressive'];
         exitYields.forEach((ey, index) => {
-            html += `<div class="matrix-header">${exitYieldLabels[index]}<br>Exit Yield (${(ey * 100).toFixed(0)}%)</div>`;
+            html += `<th>${exitYieldLabels[index]}<br>Exit yield (${(ey * 100).toFixed(0)}%)</th>`;
         });
-        
+        html += '</tr></thead>';
+
+        // Table body
+        html += '<tbody>';
         const growthRateLabels = ['Conservative', 'Neutral', 'Aggressive'];
         let resultIndex = 0;
         growthRates.forEach((g, gIndex) => {
-            html += `<div class="matrix-header">${growthRateLabels[gIndex]}<br>Growth (${(g * 100).toFixed(0)}%)</div>`;
-            exitYields.forEach((ey, eyIndex) => {
+            html += `<tr><td>${growthRateLabels[gIndex]}<br>Growth (${(g * 100).toFixed(0)}%)</td>`;
+            exitYields.forEach(() => {
                 const price = results[resultIndex].toFixed(2);
-                html += `<div class="matrix-cell">${currencySymbol}${price}</div>`;
+                html += `<td>${currencySymbol}${price}</td>`;
                 resultIndex++;
             });
+            html += '</tr>';
         });
 
-        html += '</div>';
+        html += '</tbody></table>';
         matrixContainer.innerHTML = html;
         
         // Calculate and display average and range
@@ -808,7 +864,7 @@
         const max = Math.max(...results);
         const range = max - min;
         
-        document.getElementById('averagePriceDisplay').textContent = `Average Valuation: ${currencySymbol}${average.toFixed(2)}`;
+        document.getElementById('averagePriceDisplay').textContent = `Average valuation: ${currencySymbol}${average.toFixed(2)}`;
         document.getElementById('rangeDisplay').textContent = `Range: ${currencySymbol}${min.toFixed(2)} - ${currencySymbol}${max.toFixed(2)}`;
     }
 
@@ -849,7 +905,7 @@
             }
             htmlContent += `
                 <div class="flex-1 flex flex-col items-center justify-end relative h-full">
-                    <div class="chart-bar w-2/3 flex items-end justify-center" style="height: ${heightPercentage}%; background-color: #00bfff;">
+                    <div class="chart-bar w-2/3 flex items-end justify-center" style="height: ${heightPercentage}%; background-color: #4CAF50;">
                          <span class="bar-value">${currencySymbol}${d.value.toFixed(2)}</span>
                     </div>
                     <span class="year-label mt-1">Y${d.year}</span>
@@ -859,10 +915,10 @@
 
         const exitPriceBarHtml = `
             <div class="flex-1 flex flex-col items-center justify-end relative h-full">
-                <div class="chart-bar w-2/3 flex items-end justify-center" style="height: ${exitPriceFixedHeight}%; background-color: #53d4ff;">
+                <div class="chart-bar w-2/3 flex items-end justify-center" style="height: ${exitPriceFixedHeight}%; background-color: #9CCC65;">
                     <span class="bar-value">${currencySymbol}${exitPrice.toFixed(2)}</span>
                 </div>
-                <span class="year-label mt-1">Exit Price</span>
+                <span class="year-label mt-1">Exit price</span>
             </div>
         `;
 
