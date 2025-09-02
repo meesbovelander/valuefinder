@@ -3,72 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
-    <title>The Value Finder</title>
+    <title>Finding Value</title>
     
     <!-- iOS Web App Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Finding Value">
-    <link rel="apple-touch-icon" href="https://placehold.co/180x180/41a798/ffffff?text=VF">
+    <link rel="apple-touch-icon" href="https://placehold.co/180x180/1a273b/ffffff?text=FV">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Overall page theme with a less white, inviting background */
+        /* Overall page theme with a deep, professional background */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Soft, light gray */
+            background-color: #121212;
+            background-image: radial-gradient(circle at 10% 20%, #1a273b 0%, #0d121c 90%);
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* Aligned to the top */
             min-height: 100vh;
             padding: 1rem;
-            color: #4b5563; /* Dark gray for readability */
+            color: #E0E0E0; /* Light gray for contrast */
         }
 
-        /* Main container styling with a clean, modern look */
+        /* Main container styling with a floating, modern look */
         .container {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.05);
             -webkit-backdrop-filter: blur(15px);
             backdrop-filter: blur(15px);
             border-radius: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 2rem;
-            box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.08);
-            max-width: 600px;
-            width: 100%;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
         }
 
         /* Style for input fields to give a sleek, integrated look */
         .input-field {
-            background-color: #e5e7eb;
-            border: 1px solid #d1d5db;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
             transition: border-color 0.3s, box-shadow 0.3s;
             -webkit-appearance: none; /* iOS specific styling fix */
         }
         .input-field:focus {
-            border-color: #41a798;
-            box-shadow: 0 0 0 2px rgba(65, 167, 152, 0.5);
+            border-color: #00bfff;
+            box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.3);
             outline: none;
         }
 
         /* Custom styling for the mode selection labels */
         .mode-label {
             transition: transform 0.2s, background-color 0.2s;
-            background-color: #e5e7eb;
-            color: #4b5563;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #E0E0E0;
         }
         .mode-label:hover {
             transform: translateY(-2px);
-            background-color: #d1d5db;
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
         /* Active state for the mode selection labels */
         input[type="radio"]:checked + .mode-label {
-            background-color: #41a798;
+            background-color: #00bfff;
             color: #ffffff;
             font-weight: 600;
         }
-
+        
         /* Chart bar styling for a modern, flat design */
         .chart-bar {
             width: 100%;
@@ -90,7 +90,7 @@
         .year-label {
             font-size: 0.8rem;
             white-space: nowrap;
-            color: #6b7280;
+            color: #9ca3af; /* Light gray for labels */
         }
         
         /* Media query for smaller screens (like phones) */
@@ -120,31 +120,31 @@
 </head>
 <body>
 
-<div class="container">
-    <h1 class="text-4xl font-extrabold text-center mb-2" style="color: #41a798;">Finding Value</h1>
+<div class="container w-full md:w-3/4 lg:w-1/2 mx-auto">
+    <h1 class="text-4xl font-extrabold text-center mb-6" style="color: #00bfff;">Finding Value</h1>
 
     <!-- Actual Figures Section -->
-    <div class="bg-white p-6 rounded-xl mb-6 shadow-md">
-        <h2 class="text-xl font-bold mb-4" style="color: #4b5563;">Actual Figures</h2>
+    <div class="bg-white bg-opacity-5 p-6 rounded-xl mb-6 shadow-md">
+        <h2 class="text-xl font-bold mb-4" style="color: #E0E0E0;">Actual Figures</h2>
         <div class="space-y-4">
             <div id="priceInput">
-                <label for="price" class="block font-medium mb-1 text-gray-500">Current Stock Price ($)</label>
-                <input type="number" id="price" value="100" class="input-field w-full p-3 text-gray-900 rounded-lg">
+                <label for="price" class="block font-medium mb-1 text-gray-400">Current Stock Price ($)</label>
+                <input type="number" id="price" value="100" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <div>
-                <label for="startingDividend" class="block font-medium mb-1 text-gray-500">Starting Dividend ($)</label>
-                <input type="number" id="startingDividend" value="3" class="input-field w-full p-3 text-gray-900 rounded-lg">
+                <label for="startingDividend" class="block font-medium mb-1 text-gray-400">Starting Dividend ($)</label>
+                <input type="number" id="startingDividend" value="3" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <div>
-                <label for="buybackYield" class="block font-medium mb-1 text-gray-500">Share Buyback Yield (%)</label>
-                <input type="number" id="buybackYield" value="1" class="input-field w-full p-3 text-gray-900 rounded-lg">
+                <label for="buybackYield" class="block font-medium mb-1 text-gray-400">Share Buyback Yield (%)</label>
+                <input type="number" id="buybackYield" value="1" class="input-field w-full p-3 text-white rounded-lg">
             </div>
         </div>
     </div>
     
     <!-- Mode Selection Section -->
-    <div class="bg-white p-6 rounded-xl mb-6 shadow-md">
-        <h2 class="text-xl font-bold mb-4" style="color: #4b5563;">What do you want to calculate?</h2>
+    <div class="bg-white bg-opacity-5 p-6 rounded-xl mb-6 shadow-md">
+        <h2 class="text-xl font-bold mb-4" style="color: #E0E0E0;">What do you want to calculate?</h2>
         <div class="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
             <input type="radio" name="mode" value="calculateReturn" id="radioReturn" class="sr-only" onchange="toggleInputs()">
             <label for="radioReturn" id="labelReturn" class="mode-label px-6 py-3 rounded-xl cursor-pointer text-center w-full">
@@ -158,60 +158,60 @@
     </div>
 
     <!-- Subjective Input Section -->
-    <div class="bg-white p-6 rounded-xl mb-6 shadow-md">
-        <h2 class="text-xl font-bold mb-4" style="color: #4b5563;">Your Assumptions</h2>
+    <div class="bg-white bg-opacity-5 p-6 rounded-xl mb-6 shadow-md">
+        <h2 class="text-xl font-bold mb-4" style="color: #E0E0E0;">Your Assumptions</h2>
         <div class="space-y-4">
             <div id="targetReturnInput" class="hidden">
-                <label for="totalTargetReturn" class="block font-medium mb-1 text-gray-500">Total Target Return (%)</label>
-                <input type="number" id="totalTargetReturn" value="10" class="input-field w-full p-3 text-gray-900 rounded-lg">
+                <label for="totalTargetReturn" class="block font-medium mb-1 text-gray-400">Total Target Return (%)</label>
+                <input type="number" id="totalTargetReturn" value="10" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <div id="growthRateInput">
-                <label for="dividendGrowthRate" class="block font-medium mb-1 text-gray-500">Dividend Growth Rate (%)</label>
-                <input type="number" id="dividendGrowthRate" value="3" class="input-field w-full p-3 text-gray-900 rounded-lg">
+                <label for="dividendGrowthRate" class="block font-medium mb-1 text-gray-400">Dividend Growth Rate (%)</label>
+                <input type="number" id="dividendGrowthRate" value="3" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <div>
-                <label for="exitYield" class="block font-medium mb-1 text-gray-500">Exit Yield (%)</label>
-                <input type="number" id="exitYield" value="3" class="input-field w-full p-3 text-gray-900 rounded-lg">
+                <label for="exitYield" class="block font-medium mb-1 text-gray-400">Exit Yield (%)</label>
+                <input type="number" id="exitYield" value="3" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <div>
-                <label for="timeHorizon" class="block font-medium mb-1 text-gray-500">Time Horizon (Years)</label>
-                <input type="number" id="timeHorizon" value="5" class="input-field w-full p-3 text-gray-900 rounded-lg">
+                <label for="timeHorizon" class="block font-medium mb-1 text-gray-400">Time Horizon (Years)</label>
+                <input type="number" id="timeHorizon" value="5" class="input-field w-full p-3 text-white rounded-lg">
             </div>
         </div>
     </div>
 
     <!-- Calculate Button -->
     <div class="mt-8">
-        <button onclick="calculateDDM()" class="w-full text-white font-bold py-4 rounded-xl hover:bg-opacity-80 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-opacity-50" style="background-color: #41a798; color: #ffffff;">
+        <button onclick="calculateDDM()" class="w-full text-white font-bold py-4 rounded-xl transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-opacity-50 hover:bg-opacity-80" style="background-color: #00bfff; color: #ffffff;">
             Find My Price!
         </button>
     </div>
 
     <!-- Results Section -->
     <div id="results" class="mt-8 hidden">
-        <h2 class="text-xl font-bold text-center mb-4" style="color: #4b5563;">Forecasted Values</h2>
+        <h2 class="text-xl font-bold text-center mb-4" style="color: #E0E0E0;">Forecasted Values</h2>
         <div class="space-y-4">
-            <div id="priceResult" class="bg-white p-6 rounded-xl flex flex-col justify-center items-center shadow-md hidden">
-                <span class="text-lg text-gray-500" id="priceLabel"></span>
-                <span id="priceValue" class="font-bold text-4xl mt-1" style="color: #41a798;"></span>
+            <div id="priceResult" class="bg-white bg-opacity-5 p-6 rounded-xl flex flex-col justify-center items-center shadow-md hidden">
+                <span class="text-lg text-gray-400" id="priceLabel"></span>
+                <span id="priceValue" class="font-bold text-4xl mt-1" style="color: #00bfff;"></span>
             </div>
-            <div id="returnResult" class="bg-white p-6 rounded-xl flex flex-col justify-center items-center shadow-md">
-                <span class="text-lg text-gray-500" id="returnLabel"></span>
-                <span id="returnValue" class="font-bold text-4xl mt-1" style="color: #41a798;"></span>
+            <div id="returnResult" class="bg-white bg-opacity-5 p-6 rounded-xl flex flex-col justify-center items-center shadow-md">
+                <span class="text-lg text-gray-400" id="returnLabel"></span>
+                <span id="returnValue" class="font-bold text-4xl mt-1" style="color: #00bfff;"></span>
             </div>
         </div>
     </div>
 
     <!-- Cash Flow Section -->
-    <div id="cashFlows" class="bg-white p-6 rounded-xl mt-8 shadow-md hidden">
-        <h2 class="text-xl font-bold text-center mb-4" style="color: #4b5563;">Cash Flow Overview</h2>
+    <div id="cashFlows" class="bg-white bg-opacity-5 p-6 rounded-xl mt-8 shadow-md hidden">
+        <h2 class="text-xl font-bold text-center mb-4" style="color: #E0E0E0;">Cash Flow Overview</h2>
         <!-- New div for total dividends -->
-        <div id="totalDividendsDisplay" class="bg-gray-100 p-4 rounded-lg flex flex-col items-center mb-6">
-            <span class="text-gray-600 text-sm font-medium">Total Cumulative Dividends</span>
-            <span id="totalDividendsValue" class="text-3xl font-bold mt-1" style="color: #6ed3c3;"></span>
+        <div id="totalDividendsDisplay" class="bg-white bg-opacity-5 p-4 rounded-lg flex flex-col items-center mb-6">
+            <span class="text-gray-400 text-sm font-medium">Total Cumulative Dividends</span>
+            <span id="totalDividendsValue" class="text-3xl font-bold mt-1" style="color: #53d4ff;"></span>
             <div class="mt-4 text-center">
-                <span class="text-gray-600 text-sm font-medium">Dividends as % of Total Return</span>
-                <span id="dividendReturnPercentageValue" class="text-xl font-bold mt-1 block" style="color: #41a798;"></span>
+                <span class="text-gray-400 text-sm font-medium">Dividends as % of Total Return</span>
+                <span id="dividendReturnPercentageValue" class="text-xl font-bold mt-1 block" style="color: #00bfff;"></span>
             </div>
         </div>
         
@@ -223,7 +223,7 @@
 <div id="messageBox" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
     <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-sm w-full border-2 border-red-500">
         <p id="messageText" class="text-gray-800 mb-6 text-lg font-medium"></p>
-        <button onclick="hideMessageBox()" class="bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition duration-300" style="background-color: #41a798; color: #ffffff;">OK</button>
+        <button onclick="hideMessageBox()" class="bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition duration-300" style="background-color: #00bfff; color: #ffffff;">OK</button>
     </div>
 </div>
 
@@ -231,6 +231,8 @@
     let currentMode = '';
 
     window.onload = function() {
+        // Set the default mode to "Calculate Expected Return"
+        document.getElementById('radioReturn').checked = true;
         toggleInputs();
     };
 
@@ -258,11 +260,13 @@
         const returnLabel = document.getElementById('labelReturn');
         const priceLabel = document.getElementById('labelPrice');
 
-        returnLabel.classList.remove('bg-gray-600', 'text-gray-200', 'bg-blue-500', 'text-white');
-        priceLabel.classList.remove('bg-gray-600', 'text-gray-200', 'bg-blue-500', 'text-white');
-        returnLabel.classList.add('bg-gray-100', 'text-gray-600');
-        priceLabel.classList.add('bg-gray-100', 'text-gray-600');
+        // Reset label styles
+        returnLabel.classList.remove('bg-gray-600', 'text-white');
+        priceLabel.classList.remove('bg-gray-600', 'text-white');
+        returnLabel.classList.add('bg-white', 'bg-opacity-10', 'text-gray-200');
+        priceLabel.classList.add('bg-white', 'bg-opacity-10', 'text-gray-200');
 
+        // Hide all conditional sections
         document.getElementById('priceInput').classList.add('hidden');
         document.getElementById('targetReturnInput').classList.add('hidden');
         document.getElementById('growthRateInput').classList.add('hidden');
@@ -280,13 +284,13 @@
 
         if (currentMode === 'calculateReturn') {
             returnLabel.classList.add('bg-gray-600', 'text-white');
-            returnLabel.classList.remove('bg-gray-100', 'text-gray-600');
+            returnLabel.classList.remove('bg-white', 'bg-opacity-10', 'text-gray-200');
             document.getElementById('priceInput').classList.remove('hidden');
             document.getElementById('growthRateInput').classList.remove('hidden');
             document.getElementById('returnResult').classList.remove('hidden');
         } else {
             priceLabel.classList.add('bg-gray-600', 'text-white');
-            priceLabel.classList.remove('bg-gray-100', 'text-gray-600');
+            priceLabel.classList.remove('bg-white', 'bg-opacity-10', 'text-gray-200');
             document.getElementById('targetReturnInput').classList.remove('hidden');
             document.getElementById('growthRateInput').classList.remove('hidden');
             document.getElementById('priceResult').classList.remove('hidden');
@@ -486,7 +490,7 @@
             }
             htmlContent += `
                 <div class="flex-1 flex flex-col items-center justify-end relative h-full">
-                    <div class="chart-bar w-2/3 flex items-end justify-center" style="height: ${heightPercentage}%; background-color: #41a798;">
+                    <div class="chart-bar w-2/3 flex items-end justify-center" style="height: ${heightPercentage}%; background-color: #00bfff;">
                          <span class="bar-value">$${d.value.toFixed(2)}</span>
                     </div>
                     <span class="year-label mt-1">Y${d.year}</span>
@@ -496,7 +500,7 @@
 
         const exitPriceBarHtml = `
             <div class="flex-1 flex flex-col items-center justify-end relative h-full">
-                <div class="chart-bar w-2/3 flex items-end justify-center" style="height: ${exitPriceFixedHeight}%; background-color: #6ed3c3;">
+                <div class="chart-bar w-2/3 flex items-end justify-center" style="height: ${exitPriceFixedHeight}%; background-color: #53d4ff;">
                     <span class="bar-value">$${exitPrice.toFixed(2)}</span>
                 </div>
                 <span class="year-label mt-1">Exit Price</span>
@@ -510,4 +514,3 @@
 
 </body>
 </html>
-
