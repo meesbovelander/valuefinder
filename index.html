@@ -16,8 +16,8 @@
         /* Overall page theme with a deep, professional background */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #121212;
-            background-image: radial-gradient(circle at 10% 20%, #1a273b 0%, #0d121c 90%);
+            background-color: #222f42; /* Lighter dark blue */
+            background-image: radial-gradient(circle at 10% 20%, #293850 0%, #1a2333 90%); /* Adjusted gradient */
             display: flex;
             justify-content: center;
             align-items: flex-start; /* Aligned to the top */
@@ -116,23 +116,147 @@
         input[type="number"] {
             -moz-appearance: textfield;
         }
+
+        .scenario-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        @media (max-width: 640px) {
+            .scenario-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Styling for the valuation matrix */
+        .valuation-matrix {
+            display: grid;
+            grid-template-columns: auto repeat(3, 1fr);
+            gap: 1rem;
+            width: 100%;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        .matrix-header {
+            font-weight: bold;
+            color: #00bfff;
+            padding: 0.5rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        .matrix-cell {
+            padding: 0.75rem 0.5rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            color: #E0E0E0;
+            transition: background-color 0.3s;
+        }
+        .matrix-cell:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .matrix-cell.growth-label {
+            text-align: left;
+            padding-left: 1rem;
+            font-weight: 500;
+            color: #53d4ff;
+        }
+        .matrix-cell.exit-yield-label {
+            font-weight: bold;
+            color: #53d4ff;
+        }
+
+        /* Custom toggle switch for currency selection */
+        .toggle-container {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            border-radius: 2rem;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.2rem;
+            transition: all 0.3s ease;
+            height: 2rem; /* Made the slider smaller */
+            width: 5rem; /* Made the slider smaller */
+        }
+
+        .toggle-container::before,
+        .toggle-container::after {
+            content: attr(data-label-on);
+            position: absolute;
+            font-weight: 600;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: all 0.3s ease;
+            color: #fff;
+            font-size: 0.75rem; /* Smaller font size for labels */
+            padding: 0 0.5rem;
+        }
+
+        .toggle-container::before {
+            content: "USD";
+            left: 0;
+            opacity: 1;
+        }
+
+        .toggle-container::after {
+            content: "EUR";
+            right: 0;
+            opacity: 0;
+        }
+
+        .toggle-input {
+            width: 0;
+            height: 0;
+            opacity: 0;
+        }
+
+        .toggle-thumb {
+            width: 50%;
+            height: 100%;
+            background-color: #00bfff;
+            border-radius: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-input:checked + .toggle-container .toggle-thumb {
+            transform: translateX(100%);
+        }
+        
+        .toggle-input:checked + .toggle-container::before {
+            opacity: 0;
+        }
+        
+        .toggle-input:checked + .toggle-container::after {
+            opacity: 1;
+        }
+
+        .toggle-container:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
     </style>
 </head>
 <body>
 
-<div class="container w-full md:w-3/4 lg:w-1/2 mx-auto">
+<div class="container w-full md:w-[80%] lg:w-[75%] mx-auto">
     <h1 class="text-4xl font-extrabold text-center mb-6" style="color: #00bfff;">Finding Value</h1>
 
     <!-- Actual Figures Section -->
     <div class="bg-white bg-opacity-5 p-6 rounded-xl mb-6 shadow-md">
-        <h2 class="text-xl font-bold mb-4" style="color: #E0E0E0;">Actual Figures</h2>
+        <!-- New flex container for heading and currency toggle -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold" style="color: #E0E0E0;">Actual Figures</h2>
+            <!-- The new toggle switch -->
+            <input type="checkbox" id="currencyToggle" class="toggle-input" onchange="updateCurrencyDisplay()" checked>
+            <label for="currencyToggle" class="toggle-container">
+                <span class="toggle-thumb"></span>
+            </label>
+        </div>
         <div class="space-y-4">
             <div id="priceInput">
-                <label for="price" class="block font-medium mb-1 text-gray-400">Current Stock Price ($)</label>
+                <label for="price" class="block font-medium mb-1 text-gray-400">Current Stock Price <span id="currencySymbolPrice">($)</span></label>
                 <input type="number" id="price" value="100" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <div>
-                <label for="startingDividend" class="block font-medium mb-1 text-gray-400">Starting Dividend ($)</label>
+                <label for="startingDividend" class="block font-medium mb-1 text-gray-400">Starting Dividend <span id="currencySymbolDividend">($)</span></label>
                 <input type="number" id="startingDividend" value="3" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <div>
@@ -145,14 +269,19 @@
     <!-- Mode Selection Section -->
     <div class="bg-white bg-opacity-5 p-6 rounded-xl mb-6 shadow-md">
         <h2 class="text-xl font-bold mb-4" style="color: #E0E0E0;">What do you want to calculate?</h2>
-        <div class="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
-            <input type="radio" name="mode" value="calculateReturn" id="radioReturn" class="sr-only" onchange="toggleInputs()">
-            <label for="radioReturn" id="labelReturn" class="mode-label px-6 py-3 rounded-xl cursor-pointer text-center w-full">
+        <!-- Buttons are now equal width -->
+        <div class="flex flex-col sm:flex-row sm:items-stretch space-y-3 sm:space-y-0 sm:space-x-4">
+            <input type="radio" name="mode" value="calculateReturn" id="radioReturn" class="sr-only" onchange="toggleInputs()" checked>
+            <label for="radioReturn" id="labelReturn" class="mode-label px-6 py-3 rounded-xl cursor-pointer text-center w-full sm:w-auto flex-1">
                 Expected Return
             </label>
             <input type="radio" name="mode" value="calculatePrice" id="radioPrice" class="sr-only" onchange="toggleInputs()">
-            <label for="radioPrice" id="labelPrice" class="mode-label px-6 py-3 rounded-xl cursor-pointer text-center w-full">
+            <label for="radioPrice" id="labelPrice" class="mode-label px-6 py-3 rounded-xl cursor-pointer text-center w-full sm:w-auto flex-1">
                 Target Price
+            </label>
+            <input type="radio" name="mode" value="scenarioAnalysis" id="radioScenario" class="sr-only" onchange="toggleInputs()">
+            <label for="radioScenario" id="labelScenario" class="mode-label px-6 py-3 rounded-xl cursor-pointer text-center w-full sm:w-auto flex-1">
+                Scenario Analysis
             </label>
         </div>
     </div>
@@ -169,9 +298,40 @@
                 <label for="dividendGrowthRate" class="block font-medium mb-1 text-gray-400">Dividend Growth Rate (%)</label>
                 <input type="number" id="dividendGrowthRate" value="3" class="input-field w-full p-3 text-white rounded-lg">
             </div>
-            <div>
+            <div id="exitYieldInput">
                 <label for="exitYield" class="block font-medium mb-1 text-gray-400">Exit Yield (%)</label>
                 <input type="number" id="exitYield" value="3" class="input-field w-full p-3 text-white rounded-lg">
+            </div>
+            <!-- New scenario inputs with single row layout -->
+            <div id="scenarioInputs" class="hidden space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="growthRateConservative" class="block font-medium mb-1 text-gray-400">Conservative Growth Rate (%)</label>
+                        <input type="number" id="growthRateConservative" value="3" class="input-field w-full p-3 text-white rounded-lg">
+                    </div>
+                    <div>
+                        <label for="growthRateNeutral" class="block font-medium mb-1 text-gray-400">Neutral Growth Rate (%)</label>
+                        <input type="number" id="growthRateNeutral" value="5" class="input-field w-full p-3 text-white rounded-lg">
+                    </div>
+                    <div>
+                        <label for="growthRateAggressive" class="block font-medium mb-1 text-gray-400">Aggressive Growth Rate (%)</label>
+                        <input type="number" id="growthRateAggressive" value="7" class="input-field w-full p-3 text-white rounded-lg">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="exitYieldConservative" class="block font-medium mb-1 text-gray-400">Conservative Exit Yield (%)</label>
+                        <input type="number" id="exitYieldConservative" value="6" class="input-field w-full p-3 text-white rounded-lg">
+                    </div>
+                    <div>
+                        <label for="exitYieldNeutral" class="block font-medium mb-1 text-gray-400">Neutral Exit Yield (%)</label>
+                        <input type="number" id="exitYieldNeutral" value="4" class="input-field w-full p-3 text-white rounded-lg">
+                    </div>
+                    <div>
+                        <label for="exitYieldAggressive" class="block font-medium mb-1 text-gray-400">Aggressive Exit Yield (%)</label>
+                        <input type="number" id="exitYieldAggressive" value="2" class="input-field w-full p-3 text-white rounded-lg">
+                    </div>
+                </div>
             </div>
             <div>
                 <label for="timeHorizon" class="block font-medium mb-1 text-gray-400">Time Horizon (Years)</label>
@@ -199,6 +359,16 @@
                 <span class="text-lg text-gray-400" id="returnLabel"></span>
                 <span id="returnValue" class="font-bold text-4xl mt-1" style="color: #00bfff;"></span>
             </div>
+        </div>
+    </div>
+
+    <!-- Scenario Analysis Results -->
+    <div id="scenarioResults" class="mt-8 hidden bg-white bg-opacity-5 p-6 rounded-xl shadow-md">
+        <h2 class="text-xl font-bold text-center mb-4" style="color: #E0E0E0;">Valuation Matrix</h2>
+        <div id="valuationMatrixContainer"></div>
+        <div class="mt-8 text-center space-y-2">
+            <div id="averagePriceDisplay" class="font-bold text-xl text-white"></div>
+            <div id="rangeDisplay" class="text-gray-400 text-sm"></div>
         </div>
     </div>
 
@@ -233,8 +403,33 @@
     window.onload = function() {
         // Set the default mode to "Calculate Expected Return"
         document.getElementById('radioReturn').checked = true;
+        document.getElementById('currencyToggle').checked = false; // Start with USD
         toggleInputs();
+        updateCurrencyDisplay();
     };
+
+    /**
+     * Helper function to get the selected currency symbol.
+     */
+    function getCurrencySymbol() {
+        return document.getElementById('currencyToggle').checked ? '€' : '$';
+    }
+
+    /**
+     * Updates the currency symbol displayed on the page.
+     */
+    function updateCurrencyDisplay() {
+        const symbol = getCurrencySymbol();
+        const priceLabel = document.getElementById('currencySymbolPrice');
+        const dividendLabel = document.getElementById('currencySymbolDividend');
+        priceLabel.textContent = `(${symbol})`;
+        dividendLabel.textContent = `(${symbol})`;
+        
+        // Re-run calculation if a result is currently displayed
+        if (!document.getElementById('results').classList.contains('hidden') || !document.getElementById('scenarioResults').classList.contains('hidden')) {
+            calculateDDM();
+        }
+    }
 
     /**
      * Shows a custom message box with a given message.
@@ -259,21 +454,28 @@
         const selectedRadio = document.querySelector('input[name="mode"]:checked');
         const returnLabel = document.getElementById('labelReturn');
         const priceLabel = document.getElementById('labelPrice');
+        const scenarioLabel = document.getElementById('labelScenario');
 
         // Reset label styles
         returnLabel.classList.remove('bg-gray-600', 'text-white');
         priceLabel.classList.remove('bg-gray-600', 'text-white');
+        scenarioLabel.classList.remove('bg-gray-600', 'text-white');
         returnLabel.classList.add('bg-white', 'bg-opacity-10', 'text-gray-200');
         priceLabel.classList.add('bg-white', 'bg-opacity-10', 'text-gray-200');
+        scenarioLabel.classList.add('bg-white', 'bg-opacity-10', 'text-gray-200');
 
         // Hide all conditional sections
         document.getElementById('priceInput').classList.add('hidden');
         document.getElementById('targetReturnInput').classList.add('hidden');
         document.getElementById('growthRateInput').classList.add('hidden');
+        document.getElementById('exitYieldInput').classList.add('hidden');
+        document.getElementById('scenarioInputs').classList.add('hidden');
         document.getElementById('priceResult').classList.add('hidden');
         document.getElementById('returnResult').classList.add('hidden');
         document.getElementById('results').classList.add('hidden');
         document.getElementById('cashFlows').classList.add('hidden');
+        document.getElementById('scenarioResults').classList.add('hidden');
+
 
         if (!selectedRadio) {
             currentMode = '';
@@ -283,17 +485,21 @@
         currentMode = selectedRadio.value;
 
         if (currentMode === 'calculateReturn') {
-            returnLabel.classList.add('bg-gray-600', 'text-white');
-            returnLabel.classList.remove('bg-white', 'bg-opacity-10', 'text-gray-200');
             document.getElementById('priceInput').classList.remove('hidden');
             document.getElementById('growthRateInput').classList.remove('hidden');
+            document.getElementById('exitYieldInput').classList.remove('hidden');
             document.getElementById('returnResult').classList.remove('hidden');
-        } else {
-            priceLabel.classList.add('bg-gray-600', 'text-white');
-            priceLabel.classList.remove('bg-white', 'bg-opacity-10', 'text-gray-200');
+        } else if (currentMode === 'calculatePrice') {
             document.getElementById('targetReturnInput').classList.remove('hidden');
             document.getElementById('growthRateInput').classList.remove('hidden');
+            document.getElementById('exitYieldInput').classList.remove('hidden');
             document.getElementById('priceResult').classList.remove('hidden');
+        } else if (currentMode === 'scenarioAnalysis') {
+            document.getElementById('priceInput').classList.add('hidden');
+            document.getElementById('targetReturnInput').classList.add('hidden');
+            document.getElementById('growthRateInput').classList.add('hidden');
+            document.getElementById('exitYieldInput').classList.add('hidden');
+            document.getElementById('scenarioInputs').classList.remove('hidden');
         }
     }
 
@@ -335,23 +541,30 @@
         
         const D0 = parseFloat(document.getElementById('startingDividend').value);
         const buybackYield = parseFloat(document.getElementById('buybackYield').value) / 100;
-        const exitYield = parseFloat(document.getElementById('exitYield').value) / 100;
         const years = parseInt(document.getElementById('timeHorizon').value);
 
-        if (isNaN(D0) || isNaN(buybackYield) || isNaN(exitYield) || isNaN(years) || D0 <= 0 || exitYield <= 0 || years <= 0) {
+        if (isNaN(D0) || isNaN(buybackYield) || isNaN(years) || D0 <= 0 || years <= 0) {
             showMessageBox("Please enter valid, positive numbers for all inputs.");
             return;
         }
 
         if (currentMode === 'calculateReturn') {
             const P0 = parseFloat(document.getElementById('price').value);
-            if (isNaN(P0) || P0 <= 0) {
-                 showMessageBox("Please enter a valid, positive number for Current Stock Price.");
+            const exitYield = parseFloat(document.getElementById('exitYield').value) / 100;
+            if (isNaN(P0) || P0 <= 0 || isNaN(exitYield) || exitYield <= 0) {
+                 showMessageBox("Please enter a valid, positive number for Current Stock Price and Exit Yield.");
                 return;
             }
             calculateExpectedReturn(P0, D0, years, exitYield, buybackYield);
-        } else {
+        } else if (currentMode === 'calculatePrice') {
+            const exitYield = parseFloat(document.getElementById('exitYield').value) / 100;
+             if (isNaN(exitYield) || exitYield <= 0) {
+                 showMessageBox("Please enter a valid, positive number for Exit Yield.");
+                return;
+            }
             calculateTargetPrice(D0, years, exitYield, buybackYield);
+        } else if (currentMode === 'scenarioAnalysis') {
+            runScenarioAnalysis(D0, years, buybackYield);
         }
     }
     
@@ -450,13 +663,105 @@
         document.getElementById('priceResult').classList.remove('hidden');
         
         document.getElementById('priceLabel').textContent = "Target Price";
-        document.getElementById('priceValue').textContent = `$${targetPrice.toFixed(2)}`;
+        document.getElementById('priceValue').textContent = `${getCurrencySymbol()}${targetPrice.toFixed(2)}`;
         
         document.getElementById('results').classList.remove('hidden');
         
         displayCashFlows(dividendGrowthRate, D0, years, pvResult.exitPrice, pvResult.totalDividends, dividendReturnPercentage);
     }
     
+    /**
+     * Runs the scenario analysis and displays the results.
+     * @param {number} D0 The initial dividend.
+     * @param {number} years The time horizon.
+     * @param {number} buybackYield The buyback yield.
+     */
+    function runScenarioAnalysis(D0, years, buybackYield) {
+        const growthRates = [
+            parseFloat(document.getElementById('growthRateConservative').value) / 100,
+            parseFloat(document.getElementById('growthRateNeutral').value) / 100,
+            parseFloat(document.getElementById('growthRateAggressive').value) / 100,
+        ];
+        const exitYields = [
+            parseFloat(document.getElementById('exitYieldConservative').value) / 100,
+            parseFloat(document.getElementById('exitYieldNeutral').value) / 100,
+            parseFloat(document.getElementById('exitYieldAggressive').value) / 100,
+        ];
+        
+        // Basic validation for scenario inputs
+        const allInputsValid = growthRates.every(g => !isNaN(g)) && exitYields.every(e => !isNaN(e) && e > 0);
+        if (!allInputsValid) {
+            showMessageBox("Please enter valid numbers for all Growth Rates and positive numbers for all Exit Yields.");
+            return;
+        }
+
+        const totalTargetReturn = parseFloat(document.getElementById('totalTargetReturn').value) / 100;
+        const r = totalTargetReturn - buybackYield;
+        if (isNaN(r) || r <= 0) {
+            showMessageBox(`The discount rate must be greater than zero. Please enter a valid Total Target Return greater than the buyback yield.`);
+            return;
+        }
+        
+        const results = [];
+        for (const g of growthRates) {
+            for (const ey of exitYields) {
+                const pvResult = calculatePresentValue(g, D0, years, r, ey);
+                results.push(pvResult.totalPV);
+            }
+        }
+
+        displayScenarioResults(growthRates, exitYields, results);
+    }
+
+    /**
+     * Displays the scenario analysis results in a horizontal bar graph.
+     * @param {Array<number>} growthRates
+     * @param {Array<number>} exitYields
+     * @param {Array<number>} results The array of calculated prices.
+     */
+    function displayScenarioResults(growthRates, exitYields, results) {
+        document.getElementById('results').classList.add('hidden');
+        document.getElementById('cashFlows').classList.add('hidden');
+        document.getElementById('scenarioResults').classList.remove('hidden');
+        const currencySymbol = getCurrencySymbol();
+
+        const matrixContainer = document.getElementById('valuationMatrixContainer');
+        matrixContainer.innerHTML = '';
+        
+        let html = '<div class="valuation-matrix">';
+        
+        // Header row for Exit Yields
+        html += '<div class="matrix-header"></div>'; // Top-left empty cell
+        const exitYieldLabels = ['Conservative', 'Neutral', 'Aggressive'];
+        exitYields.forEach((ey, index) => {
+            html += `<div class="matrix-header">${exitYieldLabels[index]}<br>Exit Yield (${(ey * 100).toFixed(0)}%)</div>`;
+        });
+        
+        const growthRateLabels = ['Conservative', 'Neutral', 'Aggressive'];
+        let resultIndex = 0;
+        growthRates.forEach((g, gIndex) => {
+            html += `<div class="matrix-header">${growthRateLabels[gIndex]}<br>Growth (${(g * 100).toFixed(0)}%)</div>`;
+            exitYields.forEach((ey, eyIndex) => {
+                const price = results[resultIndex].toFixed(2);
+                html += `<div class="matrix-cell">${currencySymbol}${price}</div>`;
+                resultIndex++;
+            });
+        });
+
+        html += '</div>';
+        matrixContainer.innerHTML = html;
+        
+        // Calculate and display average and range
+        const sum = results.reduce((acc, val) => acc + val, 0);
+        const average = sum / results.length;
+        const min = Math.min(...results);
+        const max = Math.max(...results);
+        const range = max - min;
+        
+        document.getElementById('averagePriceDisplay').textContent = `Average Valuation: ${currencySymbol}${average.toFixed(2)}`;
+        document.getElementById('rangeDisplay').textContent = `Range: ${currencySymbol}${min.toFixed(2)} - ${currencySymbol}${max.toFixed(2)}`;
+    }
+
     /**
      * Displays the cash flow breakdown in a single chart.
      * @param {number} g The dividend growth rate.
@@ -467,10 +772,13 @@
      * @param {number} dividendReturnPercentage The percentage of total return from dividends.
      */
     function displayCashFlows(g, D0, years, exitPrice, totalDividends, dividendReturnPercentage) {
+        document.getElementById('scenarioResults').classList.add('hidden');
+        const currencySymbol = getCurrencySymbol();
+
         const chartContainer = document.getElementById('chartContainer');
         chartContainer.innerHTML = '';
         
-        document.getElementById('totalDividendsValue').textContent = `$${totalDividends.toFixed(2)}`;
+        document.getElementById('totalDividendsValue').textContent = `${currencySymbol}${totalDividends.toFixed(2)}`;
         document.getElementById('dividendReturnPercentageValue').textContent = `${dividendReturnPercentage.toFixed(2)}%`;
 
         const dividends = [];
@@ -492,7 +800,7 @@
             htmlContent += `
                 <div class="flex-1 flex flex-col items-center justify-end relative h-full">
                     <div class="chart-bar w-2/3 flex items-end justify-center" style="height: ${heightPercentage}%; background-color: #00bfff;">
-                         <span class="bar-value">$${d.value.toFixed(2)}</span>
+                         <span class="bar-value">${currencySymbol}${d.value.toFixed(2)}</span>
                     </div>
                     <span class="year-label mt-1">Y${d.year}</span>
                 </div>
@@ -502,7 +810,7 @@
         const exitPriceBarHtml = `
             <div class="flex-1 flex flex-col items-center justify-end relative h-full">
                 <div class="chart-bar w-2/3 flex items-end justify-center" style="height: ${exitPriceFixedHeight}%; background-color: #53d4ff;">
-                    <span class="bar-value">$${exitPrice.toFixed(2)}</span>
+                    <span class="bar-value">${currencySymbol}${exitPrice.toFixed(2)}</span>
                 </div>
                 <span class="year-label mt-1">Exit Price</span>
             </div>
