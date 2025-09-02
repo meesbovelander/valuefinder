@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Value Finder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1A202C; /* Deep navy/charcoal background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .container {
+            background-color: #2D3748; /* Darker gray container */
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        .chart-bar {
+            width: 100%;
+            transition: height 0.3s ease-in-out;
+            border-radius: 0.5rem;
+            position: relative;
+        }
+        .bar-value {
+            position: absolute;
+            bottom: 0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #1A202C; /* Dark text for contrast on bright bars */
+            white-space: nowrap;
+        }
+        .year-label {
+            font-size: 0.75rem;
+            white-space: nowrap;
+            color: #A0AEC0; /* Light gray for labels */
+        }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="text-3xl font-bold text-center text-gray-100 mb-2">The Value Finder</h1>
+    <p class="text-center text-gray-400 mb-8">
+        Your go-to tool for finding the right price for a stock that helps you achieve your total return goal.
+    </p>
+
+    <!-- Actual Figures Section -->
+    <div class="bg-gray-700 p-6 rounded-lg mb-6">
+        <h2 class="text-xl font-bold text-gray-200 mb-4">Actual Figures</h2>
+        <div class="space-y-6">
+            <div>
+                <label for="price" class="block text-gray-400 font-medium mb-1">Current Stock Price ($)</label>
+                <input type="number" id="price" value="100" class="w-full p-3 bg-gray-600 text-gray-100 border-2 border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+            </div>
+            <div>
+                <label for="startingDividend" class="block text-gray-400 font-medium mb-1">Starting Dividend ($)</label>
+                <input type="number" id="startingDividend" value="3" class="w-full p-3 bg-gray-600 text-gray-100 border-2 border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+            </div>
+            <div>
+                <label for="buybackYield" class="block text-gray-400 font-medium mb-1">Share Buyback Yield (%)</label>
+                <input type="number" id="buybackYield" value="1" class="w-full p-3 bg-gray-600 text-gray-100 border-2 border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mode Selection Section -->
+    <div class="bg-gray-700 p-6 rounded-lg mb-6">
+        <h2 class="text-xl font-bold text-gray-200 mb-4">What do you want to calculate?</h2>
+        <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+            <input type="radio" name="mode" value="calculateReturn" id="radioReturn" class="sr-only peer" checked onchange="toggleInputs()">
+            <label for="radioReturn" class="px-4 py-2 rounded-lg cursor-pointer transition-colors duration-200 peer-checked:bg-blue-500 peer-checked:text-white bg-gray-600 text-gray-200 hover:bg-gray-500">
+                Expected Return
+            </label>
+            <input type="radio" name="mode" value="calculatePrice" id="radioPrice" class="sr-only peer" onchange="toggleInputs()">
+            <label for="radioPrice" class="px-4 py-2 rounded-lg cursor-pointer transition-colors duration-200 peer-checked:bg-blue-500 peer-checked:text-white bg-gray-600 text-gray-200 hover:bg-gray-500">
+                Target Price
+            </label>
+        </div>
+    </div>
+
+    <!-- Subjective Input Section -->
+    <div class="bg-gray-700 p-6 rounded-lg mb-6">
+        <h2 class="text-xl font-bold text-gray-200 mb-4">Your Assumptions</h2>
+        <div class="space-y-6">
+            <div id="targetReturnInput" class="hidden">
+                <label for="totalTargetReturn" class="block text-gray-400 font-medium mb-1">Total Target Return (%)</label>
+                <input type="number" id="totalTargetReturn" value="10" class="w-full p-3 bg-gray-600 text-gray-100 border-2 border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+            </div>
+            <div id="growthRateInput">
+                <label for="dividendGrowthRate" class="block text-gray-400 font-medium mb-1">Dividend Growth Rate (%)</label>
+                <input type="number" id="dividendGrowthRate" value="3" class="w-full p-3 bg-gray-600 text-gray-100 border-2 border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+            </div>
+            <div>
+                <label for="exitYield" class="block text-gray-400 font-medium mb-1">Exit Yield (%)</label>
+                <input type="number" id="exitYield" value="3" class="w-full p-3 bg-gray-600 text-gray-100 border-2 border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+            </div>
+            <div>
+                <label for="timeHorizon" class="block text-gray-400 font-medium mb-1">Time Horizon (Years)</label>
+                <input type="number" id="timeHorizon" value="5" class="w-full p-3 bg-gray-600 text-gray-100 border-2 border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+            </div>
+        </div>
+    </div>
+
+    <!-- Calculate Button -->
+    <div class="mt-8">
+        <button onclick="calculateDDM()" class="w-full bg-blue-500 text-white font-bold py-3 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800">
+            Find My Price!
+        </button>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results" class="mt-8 hidden">
+        <h2 class="text-xl font-bold text-center text-gray-100 mb-4">Forecasted Values</h2>
+        <div class="space-y-4">
+            <div id="priceResult" class="bg-blue-500 text-white p-4 rounded-lg flex flex-col justify-center items-center hidden">
+                <span class="text-lg" id="priceLabel"></span>
+                <span id="priceValue" class="font-bold text-3xl"></span>
+            </div>
+            <div id="returnResult" class="bg-blue-500 text-white p-4 rounded-lg flex flex-col justify-center items-center">
+                <span class="text-lg" id="returnLabel"></span>
+                <span id="returnValue" class="font-bold text-3xl"></span>
+            </div>
+            <div class="bg-gray-700 p-4 rounded-lg flex justify-between items-center text-gray-200">
+                <span class="font-medium" id="futurePriceLabel"></span>
+                <span id="futurePrice" class="font-bold text-lg text-blue-400"></span>
+            </div>
+            <div class="bg-gray-700 p-4 rounded-lg flex justify-between items-center text-gray-200">
+                <span class="font-medium" id="totalDividendsLabel"></span>
+                <span id="totalDividends" class="font-bold text-lg text-blue-400"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cash Flow Section -->
+    <div id="cashFlows" class="bg-gray-700 p-6 rounded-lg mt-8 hidden">
+        <h2 class="text-xl font-bold text-center text-gray-200 mb-4">Cash Flow Overview</h2>
+        <div id="chartContainer" class="flex justify-between items-end h-48 space-x-2"></div>
+    </div>
+</div>
+
+<!-- Custom Message Box for Errors -->
+<div id="messageBox" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
+    <div class="bg-gray-700 p-6 rounded-lg shadow-xl text-center max-w-sm w-full">
+        <p id="messageText" class="text-gray-200 mb-4"></p>
+        <button onclick="hideMessageBox()" class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300">OK</button>
+    </div>
+</div>
+
+<script>
+    let currentMode = 'calculateReturn';
+
+    window.onload = function() {
+        toggleInputs();
+    };
+
+    /**
+     * Shows a custom message box with a given message.
+     * @param {string} message The message to display.
+     */
+    function showMessageBox(message) {
+        document.getElementById('messageText').textContent = message;
+        document.getElementById('messageBox').classList.remove('hidden');
+    }
+
+    /**
+     * Hides the custom message box.
+     */
+    function hideMessageBox() {
+        document.getElementById('messageBox').classList.add('hidden');
+    }
+
+    /**
+     * Toggles the visibility of input fields based on the selected mode.
+     */
+    function toggleInputs() {
+        currentMode = document.querySelector('input[name="mode"]:checked').value;
+        document.getElementById('price').parentElement.classList.add('hidden');
+        document.getElementById('targetReturnInput').classList.add('hidden');
+        document.getElementById('growthRateInput').classList.add('hidden');
+        document.getElementById('priceResult').classList.add('hidden');
+        document.getElementById('returnResult').classList.add('hidden');
+
+        if (currentMode === 'calculateReturn') {
+            document.getElementById('price').parentElement.classList.remove('hidden');
+            document.getElementById('growthRateInput').classList.remove('hidden');
+            document.getElementById('returnResult').classList.remove('hidden');
+        } else { // calculatePrice
+            document.getElementById('price').parentElement.classList.add('hidden');
+            document.getElementById('targetReturnInput').classList.remove('hidden');
+            document.getElementById('growthRateInput').classList.remove('hidden');
+            document.getElementById('priceResult').classList.remove('hidden');
+        }
+        document.getElementById('results').classList.add('hidden');
+        document.getElementById('cashFlows').classList.add('hidden');
+    }
+
+    /**
+     * Calculates the present value of all future cash flows for a given growth rate and discount rate.
+     * @param {number} g The dividend growth rate (as a decimal).
+     * @param {number} D0 The initial annual dividend.
+     * @param {number} years The number of years in the horizon.
+     * @param {number} r The discount rate (as a decimal).
+     * @param {number} exitYield The exit yield (as a decimal).
+     * @returns {object} An object containing the total present value, total dividends, and exit price.
+     */
+    function calculatePresentValue(g, D0, years, r, exitYield) {
+        let totalPV = 0;
+        let totalDividends = 0;
+
+        // Calculate the present value of growing dividends
+        for (let i = 1; i <= years; i++) {
+            const dividend = D0 * Math.pow((1 + g), i);
+            totalPV += dividend / Math.pow((1 + r), i);
+            totalDividends += dividend;
+        }
+
+        // Calculate the exit price at year 'years' and its present value
+        const D_end = D0 * Math.pow((1 + g), years);
+        const exitPrice = D_end / exitYield;
+        totalPV += exitPrice / Math.pow((1 + r), years);
+
+        return { totalPV, totalDividends, exitPrice };
+    }
+
+    /**
+     * Main function to calculate based on the selected mode.
+     */
+    function calculateDDM() {
+        // Get common input values
+        const D0 = parseFloat(document.getElementById('startingDividend').value);
+        const buybackYield = parseFloat(document.getElementById('buybackYield').value) / 100;
+        const exitYield = parseFloat(document.getElementById('exitYield').value) / 100;
+        const years = parseInt(document.getElementById('timeHorizon').value);
+
+        // Validation for common inputs
+        if (isNaN(D0) || isNaN(buybackYield) || isNaN(exitYield) || isNaN(years) || D0 <= 0 || exitYield <= 0 || years <= 0) {
+            showMessageBox("Please enter valid, positive numbers for all inputs.");
+            return;
+        }
+
+        if (currentMode === 'calculateReturn') {
+            const P0 = parseFloat(document.getElementById('price').value);
+            if (isNaN(P0) || P0 <= 0) {
+                 showMessageBox("Please enter a valid, positive number for Current Stock Price.");
+                return;
+            }
+            calculateExpectedReturn(P0, D0, years, exitYield, buybackYield);
+        } else { // calculatePrice
+            calculateTargetPrice(D0, years, exitYield, buybackYield);
+        }
+    }
+    
+    /**
+     * Calculates the expected total return for a given growth rate.
+     */
+    function calculateExpectedReturn(P0, D0, years, exitYield, buybackYield) {
+        const dividendGrowthRate = parseFloat(document.getElementById('dividendGrowthRate').value) / 100;
+        if (isNaN(dividendGrowthRate)) {
+            showMessageBox("Please enter a valid number for Dividend Growth Rate.");
+            return;
+        }
+        
+        // Binary search for 'r' (the discount rate)
+        let r_min = -0.5;
+        let r_max = 0.5;
+        const tolerance = 0.00001;
+        const maxIterations = 100;
+        let requiredDiscountRate = 0;
+        let foundSolution = false;
+
+        for (let i = 0; i < maxIterations; i++) {
+            const r_guess = (r_min + r_max) / 2;
+            const pvResult = calculatePresentValue(dividendGrowthRate, D0, years, r_guess, exitYield);
+            const pv = pvResult.totalPV;
+
+            if (Math.abs(pv - P0) < tolerance) {
+                requiredDiscountRate = r_guess;
+                foundSolution = true;
+                break;
+            }
+
+            if (pv < P0) {
+                r_max = r_guess;
+            } else {
+                r_min = r_guess;
+            }
+        }
+        
+        if (!foundSolution) {
+             showMessageBox("A valid solution could not be found for the given inputs. Please adjust your assumptions.");
+             return;
+        }
+        
+        const expectedReturn = requiredDiscountRate + buybackYield;
+        const finalResults = calculatePresentValue(dividendGrowthRate, D0, years, requiredDiscountRate, exitYield);
+
+        // Display results formally
+        document.getElementById('priceResult').classList.add('hidden');
+        document.getElementById('returnResult').classList.remove('hidden');
+        
+        document.getElementById('returnLabel').textContent = "Projected Total Annual Return";
+        document.getElementById('returnValue').textContent = `${(expectedReturn * 100).toFixed(2)}%`;
+
+        document.getElementById('futurePriceLabel').textContent = "Projected Future Price";
+        document.getElementById('futurePrice').textContent = `$${finalResults.exitPrice.toFixed(2)}`;
+
+        document.getElementById('totalDividendsLabel').textContent = "Total Cumulative Dividends";
+        document.getElementById('totalDividends').textContent = `$${finalResults.totalDividends.toFixed(2)}`;
+
+        document.getElementById('results').classList.remove('hidden');
+        
+        // Display cash flows
+        displayCashFlows(dividendGrowthRate, D0, years, finalResults.exitPrice);
+    }
+
+    /**
+     * Calculates the target price based on inputs.
+     */
+    function calculateTargetPrice(D0, years, exitYield, buybackYield) {
+        const totalTargetReturn = parseFloat(document.getElementById('totalTargetReturn').value) / 100;
+        const dividendGrowthRate = parseFloat(document.getElementById('dividendGrowthRate').value) / 100;
+
+        if (isNaN(totalTargetReturn) || isNaN(dividendGrowthRate) || totalTargetReturn <= 0) {
+            showMessageBox("Please enter valid, positive numbers for Total Target Return and Dividend Growth Rate.");
+            return;
+        }
+
+        const r = totalTargetReturn - buybackYield;
+        if (r <= 0) {
+            showMessageBox(`The discount rate (${(totalTargetReturn * 100).toFixed(2)}% - buyback yield) must be greater than zero. Please enter a buyback yield less than the total target return.`);
+            return;
+        }
+        
+        const pvResult = calculatePresentValue(dividendGrowthRate, D0, years, r, exitYield);
+        const targetPrice = pvResult.totalPV;
+
+        // Display results formally
+        document.getElementById('returnResult').classList.add('hidden');
+        document.getElementById('priceResult').classList.remove('hidden');
+        
+        document.getElementById('priceLabel').textContent = "Target Price";
+        document.getElementById('priceValue').textContent = `$${targetPrice.toFixed(2)}`;
+
+        document.getElementById('futurePriceLabel').textContent = "Projected Future Price";
+        document.getElementById('futurePrice').textContent = `$${pvResult.exitPrice.toFixed(2)}`;
+
+        document.getElementById('totalDividendsLabel').textContent = "Total Cumulative Dividends";
+        document.getElementById('totalDividends').textContent = `$${pvResult.totalDividends.toFixed(2)}`;
+
+        document.getElementById('results').classList.remove('hidden');
+        
+        // Display cash flows
+        displayCashFlows(dividendGrowthRate, D0, years, pvResult.exitPrice);
+    }
+    
+    /**
+     * Displays the cash flow breakdown in a single chart.
+     * @param {number} g The dividend growth rate.
+     * @param {number} D0 The initial dividend.
+     * @param {number} years The time horizon.
+     * @param {number} exitPrice The calculated exit price.
+     */
+    function displayCashFlows(g, D0, years, exitPrice) {
+        const chartContainer = document.getElementById('chartContainer');
+        chartContainer.innerHTML = '';
+        const dividends = [];
+        for (let i = 1; i <= years; i++) {
+            const dividend = D0 * Math.pow((1 + g), i);
+            dividends.push({ year: i, value: dividend });
+        }
+
+        const maxDividend = Math.max(...dividends.map(d => d.value));
+        const exitPriceFixedHeight = 70; // 70% of the container height
+        const maxDividendHeight = exitPriceFixedHeight / 2; // 35% of the container height
+
+        // Generate dividend bars
+        let htmlContent = '';
+        dividends.forEach(d => {
+            let heightPercentage = 0;
+            if (maxDividend > 0) {
+                heightPercentage = (d.value / maxDividend) * maxDividendHeight;
+            }
+            htmlContent += `
+                <div class="flex-1 flex flex-col items-center justify-end relative h-full">
+                    <div class="chart-bar w-2/3 bg-cyan-400 flex items-end justify-center rounded-lg" style="height: ${heightPercentage}%;">
+                         <span class="bar-value">$${d.value.toFixed(2)}</span>
+                    </div>
+                    <span class="year-label text-gray-400 mt-1">Y${d.year}</span>
+                </div>
+            `;
+        });
+
+        // Generate exit price bar, with new proportional height
+        const exitPriceBarHtml = `
+            <div class="flex-1 flex flex-col items-center justify-end relative h-full">
+                <div class="chart-bar w-2/3 bg-emerald-400 flex items-end justify-center rounded-lg" style="height: ${exitPriceFixedHeight}%;">
+                    <span class="bar-value">$${exitPrice.toFixed(2)}</span>
+                </div>
+                <span class="year-label text-gray-400 mt-1">Exit Price</span>
+            </div>
+        `;
+
+        chartContainer.innerHTML = htmlContent + exitPriceBarHtml;
+        document.getElementById('cashFlows').classList.remove('hidden');
+    }
+</script>
+
+</body>
+</html>
+
