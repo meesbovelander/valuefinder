@@ -146,7 +146,7 @@
             padding: 0.75rem 0.5rem;
             background-color: rgba(255, 255, 255, 0.05);
             border-radius: 0.5rem;
-            color: #E0E0E0;
+            color: #ffffff; /* Updated to white */
             transition: background-color 0.3s;
         }
         .matrix-cell:hover {
@@ -232,6 +232,14 @@
         .toggle-container:hover {
             background: rgba(255, 255, 255, 0.25);
         }
+        
+        /* New styles for the symbol on the left of the label */
+        .symbol-label-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
     </style>
 </head>
 <body>
@@ -252,15 +260,24 @@
         </div>
         <div class="space-y-4">
             <div id="priceInput">
-                <label for="price" class="block font-medium mb-1 text-gray-400">Current Stock Price <span id="currencySymbolPrice">($)</span></label>
+                <div class="symbol-label-group mb-1">
+                    <span class="text-lg font-bold text-gray-400" id="currencySymbolPrice">$</span>
+                    <label for="price" class="font-medium text-gray-400">Current Stock Price</label>
+                </div>
                 <input type="number" id="price" value="100" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <div>
-                <label for="startingDividend" class="block font-medium mb-1 text-gray-400">Starting Dividend <span id="currencySymbolDividend">($)</span></label>
+                <div class="symbol-label-group mb-1">
+                    <span class="text-lg font-bold text-gray-400" id="currencySymbolDividend">$</span>
+                    <label for="startingDividend" class="font-medium text-gray-400">Starting Dividend</label>
+                </div>
                 <input type="number" id="startingDividend" value="3" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <div>
-                <label for="buybackYield" class="block font-medium mb-1 text-gray-400">Share Buyback Yield (%)</label>
+                <div class="symbol-label-group mb-1">
+                    <span class="text-lg font-bold text-gray-400">%</span>
+                    <label for="buybackYield" class="font-medium text-gray-400">Share Buyback Yield</label>
+                </div>
                 <input type="number" id="buybackYield" value="1" class="input-field w-full p-3 text-white rounded-lg">
             </div>
         </div>
@@ -291,15 +308,24 @@
         <h2 class="text-xl font-bold mb-4" style="color: #E0E0E0;">Your Assumptions</h2>
         <div class="space-y-4">
             <div id="targetReturnInput" class="hidden">
-                <label for="totalTargetReturn" class="block font-medium mb-1 text-gray-400">Total Target Return (%)</label>
+                <div class="symbol-label-group mb-1">
+                    <span class="text-lg font-bold text-gray-400">%</span>
+                    <label for="totalTargetReturn" class="font-medium text-gray-400">Total Target Return</label>
+                </div>
                 <input type="number" id="totalTargetReturn" value="10" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <div id="growthRateInput">
-                <label for="dividendGrowthRate" class="block font-medium mb-1 text-gray-400">Dividend Growth Rate (%)</label>
+                <div class="symbol-label-group mb-1">
+                    <span class="text-lg font-bold text-gray-400">%</span>
+                    <label for="dividendGrowthRate" class="font-medium text-gray-400">Dividend Growth Rate</label>
+                </div>
                 <input type="number" id="dividendGrowthRate" value="3" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <div id="exitYieldInput">
-                <label for="exitYield" class="block font-medium mb-1 text-gray-400">Exit Yield (%)</label>
+                <div class="symbol-label-group mb-1">
+                    <span class="text-lg font-bold text-gray-400">%</span>
+                    <label for="exitYield" class="font-medium text-gray-400">Exit Yield</label>
+                </div>
                 <input type="number" id="exitYield" value="3" class="input-field w-full p-3 text-white rounded-lg">
             </div>
             <!-- New scenario inputs with single row layout -->
@@ -308,15 +334,24 @@
                     <h3 class="text-lg font-semibold text-gray-300 mb-2">Growth Rate (%)</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label for="growthRateConservative" class="block font-medium mb-1 text-gray-400">Conservative</label>
+                            <div class="symbol-label-group mb-1">
+                                <span class="text-lg font-bold text-gray-400">%</span>
+                                <label for="growthRateConservative" class="font-medium text-gray-400">Conservative</label>
+                            </div>
                             <input type="number" id="growthRateConservative" value="3" class="input-field w-full p-3 text-white rounded-lg">
                         </div>
                         <div>
-                            <label for="growthRateNeutral" class="block font-medium mb-1 text-gray-400">Neutral</label>
+                            <div class="symbol-label-group mb-1">
+                                <span class="text-lg font-bold text-gray-400">%</span>
+                                <label for="growthRateNeutral" class="font-medium text-gray-400">Neutral</label>
+                            </div>
                             <input type="number" id="growthRateNeutral" value="5" class="input-field w-full p-3 text-white rounded-lg">
                         </div>
                         <div>
-                            <label for="growthRateAggressive" class="block font-medium mb-1 text-gray-400">Aggressive</label>
+                            <div class="symbol-label-group mb-1">
+                                <span class="text-lg font-bold text-gray-400">%</span>
+                                <label for="growthRateAggressive" class="font-medium text-gray-400">Aggressive</label>
+                            </div>
                             <input type="number" id="growthRateAggressive" value="7" class="input-field w-full p-3 text-white rounded-lg">
                         </div>
                     </div>
@@ -325,15 +360,24 @@
                     <h3 class="text-lg font-semibold text-gray-300 mb-2">Exit Yield (%)</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label for="exitYieldConservative" class="block font-medium mb-1 text-gray-400">Conservative</label>
+                            <div class="symbol-label-group mb-1">
+                                <span class="text-lg font-bold text-gray-400">%</span>
+                                <label for="exitYieldConservative" class="font-medium text-gray-400">Conservative</label>
+                            </div>
                             <input type="number" id="exitYieldConservative" value="6" class="input-field w-full p-3 text-white rounded-lg">
                         </div>
                         <div>
-                            <label for="exitYieldNeutral" class="block font-medium mb-1 text-gray-400">Neutral</label>
+                            <div class="symbol-label-group mb-1">
+                                <span class="text-lg font-bold text-gray-400">%</span>
+                                <label for="exitYieldNeutral" class="font-medium text-gray-400">Neutral</label>
+                            </div>
                             <input type="number" id="exitYieldNeutral" value="4" class="input-field w-full p-3 text-white rounded-lg">
                         </div>
                         <div>
-                            <label for="exitYieldAggressive" class="block font-medium mb-1 text-gray-400">Aggressive</label>
+                            <div class="symbol-label-group mb-1">
+                                <span class="text-lg font-bold text-gray-400">%</span>
+                                <label for="exitYieldAggressive" class="font-medium text-gray-400">Aggressive</label>
+                            </div>
                             <input type="number" id="exitYieldAggressive" value="2" class="input-field w-full p-3 text-white rounded-lg">
                         </div>
                     </div>
@@ -426,10 +470,10 @@
      */
     function updateCurrencyDisplay() {
         const symbol = getCurrencySymbol();
-        const priceLabel = document.getElementById('currencySymbolPrice');
-        const dividendLabel = document.getElementById('currencySymbolDividend');
-        priceLabel.textContent = `(${symbol})`;
-        dividendLabel.textContent = `(${symbol})`;
+        const priceSymbolSpan = document.getElementById('currencySymbolPrice');
+        const dividendSymbolSpan = document.getElementById('currencySymbolDividend');
+        if (priceSymbolSpan) priceSymbolSpan.textContent = symbol;
+        if (dividendSymbolSpan) dividendSymbolSpan.textContent = symbol;
         
         // Re-run calculation if a result is currently displayed
         if (!document.getElementById('results').classList.contains('hidden') || !document.getElementById('scenarioResults').classList.contains('hidden')) {
