@@ -311,12 +311,13 @@
         let totalDividends = 0;
 
         for (let i = 1; i <= years; i++) {
-            const dividend = D0 * Math.pow((1 + g), i);
+            // Updated calculation: Year 1 dividend is D0, growth applies from year 2
+            const dividend = (i === 1) ? D0 : D0 * Math.pow((1 + g), i - 1);
             totalPV += dividend / Math.pow((1 + r), i);
             totalDividends += dividend;
         }
 
-        const D_end = D0 * Math.pow((1 + g), years);
+        const D_end = D0 * Math.pow((1 + g), years - 1);
         const exitPrice = D_end / exitYield;
         totalPV += exitPrice / Math.pow((1 + r), years);
 
@@ -474,7 +475,7 @@
 
         const dividends = [];
         for (let i = 1; i <= years; i++) {
-            const dividend = D0 * Math.pow((1 + g), i);
+            const dividend = (i === 1) ? D0 : D0 * Math.pow((1 + g), i - 1);
             dividends.push({ year: i, value: dividend });
         }
 
